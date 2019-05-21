@@ -1,6 +1,28 @@
 
-cmake -E make_directory "build-ios" && cmake -E chdir "build-ios" cmake -G "Xcode" ../ -DCMAKE_TOOLCHAIN_FILE=../../toolchain/ios/iOS.toolchain.cmake -DPLATFORM=OS64COMBINED
+if [ "$1" == "-h" ] ; then
+	echo "-t; -ti"
+else
+	if [ "$1" == "-t" ] ; then
+		ios_team="$2"
+		extra_d="$3"
+	elif [ "$1" == "-ti" ] ; then
+		ios_team="$2"
+		ios_ident="$3"
+		extra_d="$4"
+	else
+		extra_d="$1"
+	fi
 
-if [ "$?" == 0 ] ; then
-	open build-ios/*.xcodeproj
+	if [ "$ios_team" != "" ] ; then
+		extra_d=$extra_d" -DCMAKE_XCODE_ATTRIBUTE_DEVELOPMENT_TEAM="$ios_team
+	fi
+	if [ "$ios_ident" != "" ] ; then
+		extra_d=$extra_d" -DBUNDLE_IDENT="$ios_ident
+	fi
+
+	cmake -E make_directory "build-ios" && cmake -E chdir "build-ios" cmake -G "Xcode" ../ -DCMAKE_TOOLCHAIN_FILE=../../toolchain/ios/iOS.toolchain.cmake -DPLATFORM=OS64COMBINED $extra_d
+
+	if [ "$?" == 0 ] ; then
+		open build-ios/*.xcodeproj
+	fi
 fi
