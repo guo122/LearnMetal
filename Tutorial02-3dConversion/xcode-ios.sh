@@ -12,12 +12,8 @@ else
 		ios_ident="$3"
 		extra_d="$4"
 	else
-		if [ -f "~/etc/env_default_ios_testteam" ] ; then
-			ios_team=`cat ~/etc/env_default_ios_testteam`
-		fi
-		if [ -f "~/etc/env_default_ios_testapp" ] ; then
-			ios_ident=`cat ~/etc/env_default_ios_testapp`
-		fi
+		ios_team=`cat ~/etc/env_default_ios_testteam 2>/dev/null`
+		ios_ident=`cat ~/etc/env_default_ios_testapp 2>/dev/null`
 		extra_d="$1"
 	fi
 
