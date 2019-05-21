@@ -16,11 +16,14 @@ set(DIR_SRCS
 	${SRCROOT}/ViewController.h
 	${SRCROOT}/ViewController.m
 	${SRCROOT}/LYShaderTypes.h
-	${SRCROOT}/shaders.metal
 	${SRCROOT}/main.m
 )
 
-set(BUNDLE_SRCS
+set(SHADERS_SRCS
+	${SRCROOT}/shaders.metal
+)
+
+set(BUNDLE_SRCS ${SHADERS_SRCS}
 	${RESROOT}/Info.plist
 	${COMMON_RESROOT}/Assets.xcassets
 	${COMMON_RESROOT}/abc.png
