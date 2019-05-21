@@ -1,14 +1,21 @@
+#!/bin/bash
 
 if [ "$1" == "-h" ] ; then
-	echo "-t; -ti"
+	echo "t[team]"
+	echo "ti[team, ident]"
+	echo "d[pc_default]"
 else
-	if [ "$1" == "-t" ] ; then
+	if [ "$1" == "t" ] ; then
 		ios_team="$2"
 		extra_d="$3"
-	elif [ "$1" == "-ti" ] ; then
+	elif [ "$1" == "ti" ] ; then
 		ios_team="$2"
 		ios_ident="$3"
 		extra_d="$4"
+	elif [ "$1" == "d" ] ; then
+		ios_team=`cat ~/etc/env_default_ios_testteam`
+		ios_ident=`cat ~/etc/env_default_ios_testapp`
+		extra_d="$2"
 	else
 		extra_d="$1"
 	fi
