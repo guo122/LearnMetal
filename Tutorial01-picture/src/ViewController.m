@@ -82,21 +82,29 @@
 - (void)setupTexture {
     UIImage *image = [UIImage imageNamed:@"abc"];
     // 纹理描述符
-    MTLTextureDescriptor *textureDescriptor = [[MTLTextureDescriptor alloc] init];
-    textureDescriptor.pixelFormat = MTLPixelFormatRGBA8Unorm;
-    textureDescriptor.width = image.size.width;
-    textureDescriptor.height = image.size.height;
-    self.texture = [self.mtkView.device newTextureWithDescriptor:textureDescriptor]; // 创建纹理
-    
-    MTLRegion region = {{ 0, 0, 0 }, {image.size.width, image.size.height, 1}}; // 纹理上传的范围
-    Byte *imageBytes = [self loadImage:image];
-    if (imageBytes) { // UIImage的数据需要转成二进制才能上传，且不用jpg、png的NSData
-        [self.texture replaceRegion:region
-                        mipmapLevel:0
-                          withBytes:imageBytes
-                        bytesPerRow:4 * image.size.width];
-        free(imageBytes); // 需要释放资源
-        imageBytes = NULL;
+    if (image)
+    {
+        NSLog(@"load image succeed.");
+        MTLTextureDescriptor *textureDescriptor = [[MTLTextureDescriptor alloc] init];
+        textureDescriptor.pixelFormat = MTLPixelFormatRGBA8Unorm;
+        textureDescriptor.width = image.size.width;
+        textureDescriptor.height = image.size.height;
+        self.texture = [self.mtkView.device newTextureWithDescriptor:textureDescriptor]; // 创建纹理
+        
+        MTLRegion region = {{ 0, 0, 0 }, {image.size.width, image.size.height, 1}}; // 纹理上传的范围
+        Byte *imageBytes = [self loadImage:image];
+        if (imageBytes) { // UIImage的数据需要转成二进制才能上传，且不用jpg、png的NSData
+            [self.texture replaceRegion:region
+                            mipmapLevel:0
+                              withBytes:imageBytes
+                            bytesPerRow:4 * image.size.width];
+            free(imageBytes); // 需要释放资源
+            imageBytes = NULL;
+        }
+    }
+    else
+    {
+        NSLog(@"load image failed.");
     }
 }
 

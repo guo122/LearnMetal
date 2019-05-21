@@ -1,6 +1,6 @@
 cmake_minimum_required (VERSION 3.0.2)
 
-set(SLN_NAME LearnMetal)
+set(SLN_NAME LearnMetal-01)
 
 project(${SLN_NAME})
 

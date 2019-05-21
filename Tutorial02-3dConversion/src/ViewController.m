@@ -118,21 +118,30 @@
 
 - (void)setupTexture {
     UIImage *image = [UIImage imageNamed:@"abc"];
-    MTLTextureDescriptor *textureDescriptor = [[MTLTextureDescriptor alloc] init];
-    textureDescriptor.pixelFormat = MTLPixelFormatRGBA8Unorm;
-    textureDescriptor.width = image.size.width;
-    textureDescriptor.height = image.size.height;
-    self.texture = [self.mtkView.device newTextureWithDescriptor:textureDescriptor];
     
-    MTLRegion region = {{ 0, 0, 0 }, {image.size.width, image.size.height, 1}};
-    Byte *imageBytes = [self loadImage:image];
-    if (imageBytes) {
-        [self.texture replaceRegion:region
-                    mipmapLevel:0
-                      withBytes:imageBytes
-                    bytesPerRow:4 * image.size.width];
-        free(imageBytes);
-        imageBytes = NULL;
+    if (image)
+    {
+        NSLog(@"load image succeed.");
+        MTLTextureDescriptor *textureDescriptor = [[MTLTextureDescriptor alloc] init];
+        textureDescriptor.pixelFormat = MTLPixelFormatRGBA8Unorm;
+        textureDescriptor.width = image.size.width;
+        textureDescriptor.height = image.size.height;
+        self.texture = [self.mtkView.device newTextureWithDescriptor:textureDescriptor];
+        
+        MTLRegion region = {{ 0, 0, 0 }, {image.size.width, image.size.height, 1}};
+        Byte *imageBytes = [self loadImage:image];
+        if (imageBytes) {
+            [self.texture replaceRegion:region
+                            mipmapLevel:0
+                              withBytes:imageBytes
+                            bytesPerRow:4 * image.size.width];
+            free(imageBytes);
+            imageBytes = NULL;
+        }
+    }
+    else
+    {
+        NSLog(@"load image failed.");
     }
 }
 
@@ -175,10 +184,6 @@
 }
 
 - (void)setupMatrixWithEncoder:(id<MTLRenderCommandEncoder>)renderEncoder {
-    
-//    self.slider.value = 1;
-//    self.rotationX.on = YES;
-    
     CGSize size = self.view.bounds.size;
     float aspect = fabs(size.width / size.height);
     GLKMatrix4 projectionMatrix = GLKMatrix4MakePerspective(GLKMathDegreesToRadians(90.0), aspect, 0.1f, 10.f);
