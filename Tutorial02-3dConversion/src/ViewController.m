@@ -51,7 +51,7 @@
     self.mtkView.delegate = self;
     self.viewportSize = (vector_uint2){self.mtkView.drawableSize.width, self.mtkView.drawableSize.height};
     
-    self.mSlider = [[UISlider alloc]initWithFrame:CGRectMake(20, 20, 200, 100)];
+    self.mSlider = [[UISlider alloc]initWithFrame:CGRectMake(20, 20, self.view.bounds.size.width - 40, 100)];
     self.mRotationXSwitch = [[UISwitch alloc]initWithFrame:CGRectMake(20, CGRectGetMaxY(self.mSlider.frame) + 20, 100, 100)];
     self.mRotationYSwitch = [[UISwitch alloc]initWithFrame:CGRectMake(20, CGRectGetMaxY(self.mRotationXSwitch.frame) + 20, 100, 100)];
     self.mRotationZSwitch = [[UISwitch alloc]initWithFrame:CGRectMake(20, CGRectGetMaxY(self.mRotationYSwitch.frame) + 20, 100, 100)];
@@ -65,6 +65,8 @@
     [self.view addSubview:self.mRotationZSwitch];
 
     [self customInit];
+    
+    [self addApplicationOrientationObserver];
 }
 
 - (void)customInit {
@@ -252,6 +254,72 @@
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+#pragma mark - orientation
+
+- (void)addApplicationOrientationObserver
+{
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleDeviceOrientationChanged:) name:UIDeviceOrientationDidChangeNotification object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleWillRotate:) name:UIApplicationWillChangeStatusBarOrientationNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleDidRotate:) name:UIApplicationDidChangeStatusBarOrientationNotification object:nil];
+}
+
+- (void)handleDeviceOrientationChanged:(NSNotification *)notification
+{
+    NSDictionary *userInfo = [notification userInfo];
+    UIInterfaceOrientation appOrientation = [UIApplication sharedApplication].statusBarOrientation;
+    
+    NSLog(@"\nOrientation:%@\n User Info :%@", @(appOrientation), userInfo);
+}
+
+- (void)handleWillRotate:(NSNotification *)notification
+{
+    switch ([UIDevice currentDevice].orientation) {
+        case UIDeviceOrientationLandscapeLeft:
+            [self.mtkView setFrame:self.view.bounds];
+            [self.mSlider setFrame:CGRectMake(20, 20, self.view.bounds.size.width - 40, 100)];
+            break;
+        case UIDeviceOrientationLandscapeRight:
+            [self.mtkView setFrame:self.view.bounds];
+            [self.mSlider setFrame:CGRectMake(20, 20, self.view.bounds.size.width - 40, 100)];
+            break;
+        case UIDeviceOrientationPortrait:
+            [self.mtkView setFrame:self.view.bounds];
+            [self.mSlider setFrame:CGRectMake(20, 20, self.view.bounds.size.width - 40, 100)];
+            break;
+        case UIDeviceOrientationUnknown:
+        case UIDeviceOrientationPortraitUpsideDown:
+        case UIDeviceOrientationFaceUp:
+        case UIDeviceOrientationFaceDown:
+        default:
+            break;
+    }
+}
+
+- (void)handleDidRotate:(NSNotification *)notification
+{
+    switch ([UIDevice currentDevice].orientation) {
+        case UIDeviceOrientationLandscapeLeft:
+            [self.mtkView setFrame:self.view.bounds];
+            [self.mSlider setFrame:CGRectMake(20, 20, self.view.bounds.size.width - 40, 100)];
+            break;
+        case UIDeviceOrientationLandscapeRight:
+            [self.mtkView setFrame:self.view.bounds];
+            [self.mSlider setFrame:CGRectMake(20, 20, self.view.bounds.size.width - 40, 100)];
+            break;
+        case UIDeviceOrientationPortrait:
+            [self.mtkView setFrame:self.view.bounds];
+            [self.mSlider setFrame:CGRectMake(20, 20, self.view.bounds.size.width - 40, 100)];
+            break;
+        case UIDeviceOrientationUnknown:
+        case UIDeviceOrientationPortraitUpsideDown:
+        case UIDeviceOrientationFaceUp:
+        case UIDeviceOrientationFaceDown:
+        default:
+            break;
+    }
 }
 
 @end
