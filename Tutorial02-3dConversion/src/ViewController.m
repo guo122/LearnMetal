@@ -19,6 +19,12 @@
 @property (nonatomic, strong) IBOutlet UISwitch *rotationY;
 @property (nonatomic, strong) IBOutlet UISwitch *rotationZ;
 
+@property (nonatomic , strong) UISwitch *mRotationXSwitch;
+@property (nonatomic , strong) UISwitch *mRotationYSwitch;
+@property (nonatomic , strong) UISwitch *mRotationZSwitch;
+
+@property (nonatomic , strong) UISlider *mSlider;
+
 @property (nonatomic, strong) IBOutlet UISlider *slider;
 
 // data
@@ -45,6 +51,19 @@
     self.mtkView.delegate = self;
     self.viewportSize = (vector_uint2){self.mtkView.drawableSize.width, self.mtkView.drawableSize.height};
     
+    self.mSlider = [[UISlider alloc]initWithFrame:CGRectMake(20, 20, 200, 100)];
+    self.mRotationXSwitch = [[UISwitch alloc]initWithFrame:CGRectMake(20, CGRectGetMaxY(self.mSlider.frame) + 20, 100, 100)];
+    self.mRotationYSwitch = [[UISwitch alloc]initWithFrame:CGRectMake(20, CGRectGetMaxY(self.mRotationXSwitch.frame) + 20, 100, 100)];
+    self.mRotationZSwitch = [[UISwitch alloc]initWithFrame:CGRectMake(20, CGRectGetMaxY(self.mRotationYSwitch.frame) + 20, 100, 100)];
+    
+    [self.mSlider setValue:0.01f];
+    [self.mSlider setMaximumValue:0.2f];
+    
+    [self.view addSubview:self.mSlider];
+    [self.view addSubview:self.mRotationXSwitch];
+    [self.view addSubview:self.mRotationYSwitch];
+    [self.view addSubview:self.mRotationZSwitch];
+
     [self customInit];
 }
 
@@ -154,20 +173,25 @@
 }
 
 - (void)setupMatrixWithEncoder:(id<MTLRenderCommandEncoder>)renderEncoder {
+    
+//    self.slider.value = 1;
+//    self.rotationX.on = YES;
+    
     CGSize size = self.view.bounds.size;
     float aspect = fabs(size.width / size.height);
     GLKMatrix4 projectionMatrix = GLKMatrix4MakePerspective(GLKMathDegreesToRadians(90.0), aspect, 0.1f, 10.f);
     GLKMatrix4 modelViewMatrix = GLKMatrix4Translate(GLKMatrix4Identity, 0.0f, 0.0f, -2.0f);
     static float x = 0.0, y = 0.0, z = M_PI;
-    if (self.rotationX.on) {
-        x += self.slider.value;
+    if (self.mRotationXSwitch.on) {
+        x += self.mSlider.value;
     }
-    if (self.rotationY.on) {
-        y += self.slider.value;
+    if (self.mRotationYSwitch.on) {
+        y += self.mSlider.value;
     }
-    if (self.rotationZ.on) {
-        z += self.slider.value;
+    if (self.mRotationZSwitch.on) {
+        z += self.mSlider.value;
     }
+    
     modelViewMatrix = GLKMatrix4Rotate(modelViewMatrix, x, 1, 0, 0);
     modelViewMatrix = GLKMatrix4Rotate(modelViewMatrix, y, 0, 1, 0);
     modelViewMatrix = GLKMatrix4Rotate(modelViewMatrix, z, 0, 0, 1);
