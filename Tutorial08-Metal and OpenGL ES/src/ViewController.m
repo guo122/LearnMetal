@@ -8,7 +8,7 @@
 @import MetalKit;
 #import "LYShaderTypes.h"
 #import "ViewController.h"
-#import "LYOpenGLView.h"
+#import "GL/LYOpenGLView.h"
 
 @interface ViewController () <MTKViewDelegate>
 
